@@ -40,7 +40,7 @@ PLAYER_MAP = {
 DEFAULT_IMAGE = "https://example.com/default.png"
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1497592013166608484/-bQDkOKmZBbxRMXwkmgQqrFsk4cdrtKIuKfVlxk81XeXwqalZ-9VliOuSC5wI1YMcuRT"
 
-CHECK_INTERVAL = 10 # 建議調高，避免被 Nexon 封鎖 IP
+CHECK_INTERVAL = 15 # 建議調高，避免被 Nexon 封鎖 IP
 API_URL_TEMPLATE = "https://mverse-api.nexon.com/social/v1/profile/{}"
 
 last_known_data = {pid: {"is_online": None, "world_name": None} for pid in PLAYER_MAP.keys()}
