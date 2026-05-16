@@ -33,13 +33,14 @@ PLAYER_MAP = {
     "20372100009382026": {"name": "JOON", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/315/1778431919948.png"},
     "20372100003462156": {"name": "ㄋㄍ奧米加", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/987/1778554167572.png"},
     "20372100001585009": {"name": "打手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
-    "20372100007118040": {"name": "將軍&蕾潔", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"}
+    "20372100007118040": {"name": "將軍&蕾潔", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
+    "20372100005885364": {"name": "DCwaiting", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/506/1778862090312.png"}
 }
 
 DEFAULT_IMAGE = "https://example.com/default.png"
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1497592013166608484/-bQDkOKmZBbxRMXwkmgQqrFsk4cdrtKIuKfVlxk81XeXwqalZ-9VliOuSC5wI1YMcuRT"
 
-CHECK_INTERVAL = 15 # 建議調高，避免被 Nexon 封鎖 IP
+CHECK_INTERVAL = 10 # 建議調高，避免被 Nexon 封鎖 IP
 API_URL_TEMPLATE = "https://mverse-api.nexon.com/social/v1/profile/{}"
 
 last_known_data = {pid: {"is_online": None, "world_name": None} for pid in PLAYER_MAP.keys()}
@@ -73,28 +74,34 @@ def check_players():
             should_notify = False
             status_msg = ""
             
-            if is_online != prev["is_online"]:
-                should_notify = True
-                status_msg = "🟢 上線了！" if is_online else "🔴 下線了。"
-            elif is_online and world_name != prev["world_name"]:
-                should_notify = True
-                status_msg = "🔄 切換世界"
-
             if should_notify:
                 last_known_data[pid] = {"is_online": is_online, "world_name": world_name}
                 current_world = world_name if world_name else "大廳或選單中"
-                color = 3066993 if is_online else 15158332 
                 
-                description = f"玩家：**{name}**\n代碼：`{p_code}`\n狀態：**{status_msg}**"
+                # 💡 調整 1：把左邊線的顏色改成最亮眼的純紅、純綠、純黃
+                if is_online:
+                    if "切換世界" in status_msg:
+                        color = 16776960  # 純黃色 (Hex: #FFFF00)
+                        title_icon = "🔄"
+                    else:
+                        color = 65280     # 純綠色 (Hex: #00FF00)
+                        title_icon = "🟢"
+                else:
+                    color = 16711680      # 純紅色 (Hex: #FF0000)
+                    title_icon = "🔴"
+                
+                # 內文部分
+                description = f"代碼：`{p_code}`\n狀態：**{status_msg}**"
                 if is_online:
                     description += f"\n目前位置：`{current_world}`"
 
+                # 💡 調整 2：把 Title 改成「圖示＋玩家名＋狀態」，一秒辨識
                 payload = {
                     "embeds": [{
-                        "title": "楓之谷發貨號動態",
+                        "title": f"{title_icon} 【{name}】{status_msg}",  # 👈 標題開頭直接帶有大紅綠燈
                         "description": description,
                         "thumbnail": {"url": custom_image}, 
-                        "color": color,
+                        "color": color,                                  # 👈 側邊欄變超亮色
                         "footer": {"text": f"PPSN: {pid}"},
                         "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
                     }]
