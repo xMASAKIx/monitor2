@@ -78,11 +78,26 @@ def check_players():
             should_notify = False
             status_msg = ""
             
+            # 💡 【補回比對邏輯】
+            if prev["is_online"] != is_online:
+                # 狀態改變了（上線或下線）
+                should_notify = True
+                if is_online:
+                    status_msg = "上線了"
+                else:
+                    status_msg = "下線了"
+            elif is_online and prev["world_name"] != world_name:
+                # 本來就在線上，但換了世界
+                should_notify = True
+                status_msg = f"切換世界 (從 {prev['world_name'] or '大廳'} ➡️ {world_name or '大廳'})"
+
+            
             if should_notify:
+                # 更新最後已知狀態
                 last_known_data[pid] = {"is_online": is_online, "world_name": world_name}
                 current_world = world_name if world_name else "大廳或選單中"
                 
-                # 💡 調整 1：把左邊線的顏色改成最亮眼的純紅、純綠、純黃
+                # 調整顏色與圖示
                 if is_online:
                     if "切換世界" in status_msg:
                         color = 16776960  # 純黃色 (Hex: #FFFF00)
@@ -91,7 +106,7 @@ def check_players():
                         color = 65280     # 純綠色 (Hex: #00FF00)
                         title_icon = "🟢"
                 else:
-                    color = 16711680      # 純紅色 (Hex: #FF0000)
+                    color = 16185856      # 純紅色 (Hex: #FF0000)
                     title_icon = "🔴"
                 
                 # 內文部分
@@ -99,13 +114,13 @@ def check_players():
                 if is_online:
                     description += f"\n目前位置：`{current_world}`"
 
-                # 💡 調整 2：把 Title 改成「圖示＋玩家名＋狀態」，一秒辨識
+                # 組裝 Payload
                 payload = {
                     "embeds": [{
-                        "title": f"{title_icon} 【{name}】{status_msg}",  # 👈 標題開頭直接帶有大紅綠燈
+                        "title": f"{title_icon} 【{name}】{status_msg}",  
                         "description": description,
                         "thumbnail": {"url": custom_image}, 
-                        "color": color,                                  # 👈 側邊欄變超亮色
+                        "color": color,                                  
                         "footer": {"text": f"PPSN: {pid}"},
                         "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
                     }]
@@ -113,11 +128,11 @@ def check_players():
                 
                 # 分流邏輯
                 if pid in SPECIAL_PLAYERS:
-                    requests.post(DISCORD_WEBHOOK_URL_PAKA, json=payload)
-                    print(f"🚀 [dc2] 專屬通知: {name}")
+                    requests.post(DISCORD_WEBHOOK_URL_PAKA, json=payload, timeout=10)
+                    print(f"🚀 [dc2] 專屬通知: {name} {status_msg}")
                 else:
-                    requests.post(DISCORD_WEBHOOK_URL, json=payload)
-                    print(f"📣 [dc1] 一般通知: {name}")
+                    requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
+                    print(f"📣 [dc1] 一般通知: {name} {status_msg}")
 
         except Exception as e:
             print(f"檢查 {pid} ({info['name']}) 出錯: {e}")
