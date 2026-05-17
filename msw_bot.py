@@ -90,7 +90,7 @@ def check_players():
                 status_msg = "上線了" if is_online else "下線了"
             elif is_online and prev["world_name"] != world_name:
                 should_notify = True
-                status_msg = f"切換世界 (從 {prev['world_name'] or '大廳'} ➡️ {world_name or '大廳'})"
+                status_msg = f"切換世界"
             
             if should_notify:
                 # 確定要通知後，立即更新歷史資料快取
