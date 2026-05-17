@@ -12,7 +12,6 @@ def home():
 
 def run_web():
     port = int(os.environ.get("PORT", 10000))
-    # 加入 use_reloader=False 避免在 Render 上重複啟動線程
     app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
 
 # --- 設定區域 ---
@@ -44,7 +43,7 @@ PLAYER_MAP = {
 DEFAULT_IMAGE = "https://example.com/default.png"
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1497592013166608484/-bQDkOKmZBbxRMXwkmgQqrFsk4cdrtKIuKfVlxk81XeXwqalZ-9VliOuSC5wI1YMcuRT"
 
-CHECK_INTERVAL = 15 # 建議調高，避免被 Nexon 封鎖 IP
+CHECK_INTERVAL = 15 
 API_URL_TEMPLATE = "https://mverse-api.nexon.com/social/v1/profile/{}"
 
 last_known_data = {pid: {"is_online": None, "world_name": None} for pid in PLAYER_MAP.keys()}
@@ -54,7 +53,7 @@ def check_players():
     print(f"[{time.strftime('%H:%M:%S')}] 啟動掃描...")
 
     for pid, info in PLAYER_MAP.items():
-        time.sleep(0.2) # 每個請求微小間隔，保護 IP
+        time.sleep(0.2) # 保護 IP 用的微小間隔
         try:
             name = info["name"]
             custom_image = info.get("image", DEFAULT_IMAGE)
@@ -64,57 +63,56 @@ def check_players():
             response = requests.get(url, headers=headers, timeout=10)
             data_root = response.json().get('data', {})
             
-            is_online = (data_root.get('isOnline') == 1)
+            # 兼容 1/0 或 True/False 的狀態值
+            raw_online = data_root.get('isOnline')
+            is_online = (raw_online == 1 or raw_online is True)
+            
             world_name = data_root.get('worldName') 
             p_code = data_root.get('profileCode', '未知')
             
             prev = last_known_data[pid]
 
-            # 首次啟動：存入資料但不發通知
+            # 首次啟動：存入資料（洗掉 None 狀態）但不發通知
             if prev["is_online"] is None:
                 last_known_data[pid] = {"is_online": is_online, "world_name": world_name}
+                print(f"📌 [初始化紀錄] {name} -> 線上: {is_online}, 世界: {world_name}")
                 continue
 
             should_notify = False
             status_msg = ""
             
-            # 💡 【補回比對邏輯】
+            # 印出即時比對狀況（方便在 Render 之後 debug 測試帳號）
+            print(f"   [比對-{name}] 歷史: {prev['is_online']}({prev['world_name']}) ➡️ 最新: {is_online}({world_name})")
+
+            # 核心狀態改變判斷
             if prev["is_online"] != is_online:
-                # 狀態改變了（上線或下線）
                 should_notify = True
-                if is_online:
-                    status_msg = "上線了"
-                else:
-                    status_msg = "下線了"
+                status_msg = "上線了" if is_online else "下線了"
             elif is_online and prev["world_name"] != world_name:
-                # 本來就在線上，但換了世界
                 should_notify = True
                 status_msg = f"切換世界 (從 {prev['world_name'] or '大廳'} ➡️ {world_name or '大廳'})"
-
             
             if should_notify:
-                # 更新最後已知狀態
+                # 確定要通知後，立即更新歷史資料快取
                 last_known_data[pid] = {"is_online": is_online, "world_name": world_name}
                 current_world = world_name if world_name else "大廳或選單中"
                 
-                # 調整顏色與圖示
+                # 色彩與圖示燈號
                 if is_online:
                     if "切換世界" in status_msg:
-                        color = 16776960  # 純黃色 (Hex: #FFFF00)
+                        color = 16776960  # 純黃色
                         title_icon = "🔄"
                     else:
-                        color = 65280     # 純綠色 (Hex: #00FF00)
+                        color = 65280     # 純綠色
                         title_icon = "🟢"
                 else:
-                    color = 16185856      # 純紅色 (Hex: #FF0000)
+                    color = 16185856      # 純紅色
                     title_icon = "🔴"
                 
-                # 內文部分
                 description = f"代碼：`{p_code}`\n狀態：**{status_msg}**"
                 if is_online:
                     description += f"\n目前位置：`{current_world}`"
 
-                # 組裝 Payload
                 payload = {
                     "embeds": [{
                         "title": f"{title_icon} 【{name}】{status_msg}",  
@@ -126,49 +124,38 @@ def check_players():
                     }]
                 }
                 
-                # 分流邏輯
-                if pid in SPECIAL_PLAYERS:
-                    requests.post(DISCORD_WEBHOOK_URL_PAKA, json=payload, timeout=10)
-                    print(f"🚀 [dc2] 專屬通知: {name} {status_msg}")
-                else:
-                    requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
-                    print(f"📣 [dc1] 一般通知: {name} {status_msg}")
+                # 乾淨發送：全部直接走同一個 Webhook
+                requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
+                print(f"📣 [Discord已發送] 通知玩家: {name} {status_msg}")
 
         except Exception as e:
-            print(f"檢查 {pid} ({info['name']}) 出錯: {e}")
+            print(f"❌ 檢查 {pid} ({info.get('name', '未知')}) 出錯: {e}")
 
 def main_loop():
     while True:
-        # 確保 check_players 內部有 print("掃描中...") 以便觀察
         check_players()
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
-    # 1. 啟動時先發一次訊息確認連線 (加入詳細診斷日誌)
     print("--- 正在嘗試發送啟動訊號到 Discord ---")
     try:
-        # 加入 headers 模擬瀏覽器，並透過 response 變數捕捉回傳狀態
         response = requests.post(
             DISCORD_WEBHOOK_URL, 
-            json={"content": "🤖 維京2號已自己掰開！"},
+            json={"content": "🤖 安靜晚安！"},
             headers={'User-Agent': 'Mozilla/5.0'},
             timeout=10
         )
-        
-        if response.status_code == 204:
-            print(f"✅ Discord 啟動訊號發送成功！(狀態碼: {response.status_code})")
+        if response.status_code in [200, 204]:
+            print(f"✅ Discord 啟動訊號發送成功！")
         else:
             print(f"❌ Discord 拒絕請求，錯誤代碼: {response.status_code}")
-            print(f"   回應內容: {response.text}")
             
     except Exception as e:
         print(f"💥 啟動訊號發送過程中發生異常: {e}")
 
-    # 2. 啟動背景線程
     monitor_thread = threading.Thread(target=main_loop, daemon=True)
     monitor_thread.start()
     print("📡 後台監控線程已啟動，開始循環掃描。")
 
-    # 3. 啟動 Web 服務 (Render 需要此服務來維持連線)
     print("🌐 正在啟動 Flask Web 服務...")
     run_web()
