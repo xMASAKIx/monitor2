@@ -34,10 +34,11 @@ PLAYER_MAP = {
     "20372100001585009": {"name": "打手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
     "20372100007118040": {"name": "多路", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
     "20372100005885364": {"name": "DCwaiting", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/506/1778862090312.png"},
-    "20372100003186784": {"name": "死靈妹", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/858/1731945991995.png"},
     "20372100004194770": {"name": "阿丞", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/21/1778951712386.png"},
     "20372100000737301": {"name": "HEE SABER", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/826/1747487981598.png"},
-    "20372100002734060": {"name": "死靈妹妹", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/412/1731771573322.png"},
+    "20372000486671177": {"name": "韓國愛芮", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/58/1775909266323.png"},
+    "20372100003863084": {"name": "阿卡利作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/368/1757691781562.png"},
+    "20372100003462165": {"name": "奧米加獸作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/988/1775817850083.png"},
     "20372000285890864": {"name": "黑子", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/703/1746433990616.png"}
 }
 
