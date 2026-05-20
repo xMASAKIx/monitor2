@@ -44,24 +44,56 @@ PLAYER_MAP = {
 DEFAULT_IMAGE = "https://example.com/default.png"
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1497592013166608484/-bQDkOKmZBbxRMXwkmgQqrFsk4cdrtKIuKfVlxk81XeXwqalZ-9VliOuSC5wI1YMcuRT"
 
+# 建議調到 30 或 60 比較安全，但這邊先保留你原本的 15 試試看
 CHECK_INTERVAL = 15 
 API_URL_TEMPLATE = "https://mverse-api.nexon.com/social/v1/profile/{}"
 
 last_known_data = {pid: {"is_online": None, "world_name": None} for pid in PLAYER_MAP.keys()}
+
+def send_ip_blocked_warning(status_code):
+    """當發現被鎖 IP 時，發送警告到 Discord"""
+    print(f"⚠️ [警告] 安靜已晚安睡去: {status_code}。正在發送通知...")
+    payload = {
+        "embeds": [{
+            "title": "⚠️ 安靜已經睡到叫不起來 (Error 1015)",
+            "description": f"安靜叫不起來了。\n**原因**：安靜昨晚沒睡太累，已被 rate limit。\n**HTTP 狀態碼**：`{status_code}`\n\n倒數機制已啟動：**安靜將起床尿尿 10 分鐘**，隨後再去睡回籠覺。",
+            "color": 16744192,  # 橘色
+            "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        }]
+    }
+    try:
+        requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
+    except Exception as e:
+        print(f"發送 IP 被鎖警告至 DC 失敗: {e}")
 
 def check_players():
     global last_known_data
     print(f"[{time.strftime('%H:%M:%S')}] 啟動掃描...")
 
     for pid, info in PLAYER_MAP.items():
-        time.sleep(0.2) # 保護 IP 用的微小間隔
+        time.sleep(0.6) # 👈 幫你拉長到 1.0 秒，分散連擊請求，能大大降低再被鎖的機率！
         try:
             name = info["name"]
             custom_image = info.get("image", DEFAULT_IMAGE)
             url = API_URL_TEMPLATE.format(pid)
-            headers = {'User-Agent': 'Mozilla/5.0'}
+            
+            # 偽裝稍微完整一點的瀏覽器特徵
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
             
             response = requests.get(url, headers=headers, timeout=10)
+            
+            # 💡 【新增判斷】如果狀態碼不是 200，先記 LOG；如果是被鎖，就發 DC 通知並休息 10 分鐘
+            if response.status_code != 200:
+                print(f"❌ 擷取 {name} 失敗，狀態碼: {response.status_code}")
+                if response.status_code in [429, 403, 1015]:
+                    send_ip_blocked_warning(response.status_code)
+                    print("😴 進入冷卻模式，暫停打擾 Nexon 10 分鐘...")
+                    time.sleep(600)  # 暫停 10 分鐘
+                    return           # 直接中斷這一輪，等 10 分鐘後重新開始
+                continue
+                
             data_root = response.json().get('data', {})
             
             # 兼容 1/0 或 True/False 的狀態值
