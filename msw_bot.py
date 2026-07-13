@@ -21,21 +21,15 @@ PLAYER_MAP = {
     "20372100003328034": {"name": "Coya奇術", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/949/1778243422289.png"},
     "20372001057320745": {"name": "MIKA", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/854/1766070535501.png"},
     "20372100005833987": {"name": "菲特", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/440/1757093677010.png"},
-    "20372100005779084": {"name": "簡&卡媽", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/951/1770739129110.png"},
     "20372100007840052": {"name": "惡魔狐", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1757623973159.png"},
     "20372100007791322": {"name": "奶鱈", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/773/1758903318897.png"},
     "20372100008359961": {"name": "沖田作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/18/1777724572613.png"},
-    "20372100002553986": {"name": "殺手兔作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/610/1777201020468.png"},
-    "20372100009098159": {"name": "哥倫比雅作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/123/1777628265094.png"},
-    "20372100009382026": {"name": "JOON", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/315/1778431919948.png"},
-    "20372100001585009": {"name": "打手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
+    "20372100001585009": {"name": "手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
     "20372100007118040": {"name": "多路", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
     "20372100005885364": {"name": "DCwaiting", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/506/1778862090312.png"},
     "20372100000737301": {"name": "HEE SABER", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/826/1747487981598.png"},
-    "20372100004136222": {"name": "髒東西最愛", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/56/1779710669785.png"},
     "20372100003917657": {"name": "大雅", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/274/1744256438313.png"},
     "20372100003500662": {"name": "雅", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/421/1742382425658.png"},
-    "20372100005520366": {"name": "伊卡路斯", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/336/1749557991430.png"},
     "20372100009354992": {"name": "AI王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/988/1780313265730.png"}
 }
 
