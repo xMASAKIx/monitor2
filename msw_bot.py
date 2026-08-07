@@ -26,7 +26,7 @@ PLAYER_MAP = {
     "20372100008359961": {"name": "沖田作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/18/1777724572613.png"},
     "20372100001585009": {"name": "手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
     "20372100007118040": {"name": "多路", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
-    "20372100005885364": {"name": "DCwaiting", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/506/1778862090312.png"},
+    "20372100002553986": {"name": "兔子獵人", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/280/1785827472143.png"},
     "20372100000737301": {"name": "HEE SABER", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/826/1747487981598.png"},
     "20372100003917657": {"name": "大雅", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/274/1744256438313.png"},
     "20372100003500662": {"name": "雅", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/421/1742382425658.png"},
