@@ -17,13 +17,8 @@ def run_web():
 # --- 設定區域 ---
 PLAYER_MAP = {
     "20372100007473992": {"name": "蕾米&芙蘭", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/792/1753813913624.png"},
-    "20372100004981518": {"name": "AWAWA", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/706/1749651958133.png"},
     "20372100003328034": {"name": "Coya奇術", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/949/1778243422289.png"},
     "20372001057320745": {"name": "MIKA", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/854/1766070535501.png"},
-    "20372100005833987": {"name": "菲特", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/440/1757093677010.png"},
-    "20372100007840052": {"name": "惡魔狐", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1757623973159.png"},
-    "20372100007791322": {"name": "奶鱈", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/773/1758903318897.png"},
-    "20372100008359961": {"name": "沖田作者", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/18/1777724572613.png"},
     "20372100001585009": {"name": "手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
     "20372100007118040": {"name": "多路", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
     "20372100002553986": {"name": "兔子獵人", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/280/1785827472143.png"},
@@ -31,7 +26,6 @@ PLAYER_MAP = {
     "20372100003917657": {"name": "大雅", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/274/1744256438313.png"},
     "20372100003500662": {"name": "雅", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/421/1742382425658.png"},
     "20372100009354992": {"name": "AI王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/988/1780313265730.png"},
-    "20372100006261424": {"name": "小奶子", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/181/1786160059942.png"},
     "20372100004211092": {"name": "新幽幽子", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/539/1781362021600.png"}
 }
 
