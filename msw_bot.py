@@ -23,7 +23,7 @@ player_map_env = os.environ.get("PLAYER_MAP_JSON", "{}")
 try:
     PLAYER_MAP = json.loads(player_map_env)
 except Exception as e:
-    print(<code>❌ 解析 PLAYER_MAP_JSON 失敗: {e}</code>)
+    print(f"❌ 解析 PLAYER_MAP_JSON 失敗: {e}")
     PLAYER_MAP = {}
 
 # 建議調到 30 或 60 比較安全，但這邊先保留你原本的 15 試試看
