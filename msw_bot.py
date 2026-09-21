@@ -3,6 +3,7 @@ import time
 import threading
 from flask import Flask
 import os
+import json
 
 app = Flask('')
 
@@ -15,23 +16,15 @@ def run_web():
     app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
 
 # --- 設定區域 ---
-PLAYER_MAP = {
-    "20372100007473992": {"name": "蕾米&芙蘭", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/792/1753813913624.png"},
-    "20372100003328034": {"name": "Coya奇術", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/949/1778243422289.png"},
-    "20372001057320745": {"name": "MIKA", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/854/1766070535501.png"},
-    "20372100001585009": {"name": "手槍王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/982/1744040914954.png"},
-    "20372100007118040": {"name": "多路", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/430/1778724875211.png"},
-    "20372100002553986": {"name": "兔子獵人", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/280/1785827472143.png"},
-    "20372100000737301": {"name": "HEE SABER", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/826/1747487981598.png"},
-    "20372100003917657": {"name": "大雅", "image": "https://mod-file.dn.nexoncdn.co.kr/profile/274/1744256438313.png"},
-    "20372100003500662": {"name": "雅", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/421/1742382425658.png"},
-    "20372100009354992": {"name": "AI王", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/988/1780313265730.png"},
-    "20372100004211092": {"name": "新幽幽子", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/539/1781362021600.png"},
-    "20372100001110201": {"name": "mimiming阿狸", "image": "https://mod-file.dn.nexoncdn.co.kr/shop/594/1723531165603.png"}
-}
-
 DEFAULT_IMAGE = "https://example.com/default.png"
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
+
+player_map_env = os.environ.get("PLAYER_MAP_JSON", "{}")
+    try:
+        PLAYER_MAP = json.loads(player_map_env)
+    except Exception as e:
+        print(<code>❌ 解析 PLAYER_MAP_JSON 失敗: {e}</code>)
+        PLAYER_MAP = {}
 
 # 建議調到 30 或 60 比較安全，但這邊先保留你原本的 15 試試看
 CHECK_INTERVAL = 15 
